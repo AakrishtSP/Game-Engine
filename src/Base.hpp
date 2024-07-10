@@ -5,6 +5,7 @@
 #include <typeindex>
 #include <typeinfo>
 #include <memory>
+#include <vector>
 
 
 class GameObject : public std::enable_shared_from_this<GameObject>{
@@ -27,9 +28,20 @@ public:
         if (component != components.end()) {  //if the component is found
             return static_cast<T*>(component->second.get()); //return the component
         }
-        return nullptr;
+        return nullptr; //if the component is not found return null
     }
-        void update() {
+
+    //Creating Node system
+    void addChild(std::shared_ptr<GameObject> child) {
+        child->parent = shared_from_this(); //set the parent of the child to the current game object
+        children.push_back(child); //add the child to the children vector
+    }
+
+    std::shared_ptr<GameObject> getParent() const { return parent.lock(); } //return the parent of the game object {lock the weak pointer to get the shared pointer}
+
+
+    //Update function to update all the components
+    void update() {
         for (auto& [type, component] : components) {
             component->update();
         }
@@ -39,6 +51,8 @@ public:
     virtual ~GameObject() {}
 protected:
     std::string name;
+    std::weak_ptr<GameObject> parent;   //weak pointer to the parent cuz we dont want child to keep the parent alive:- Only parent is allowed to keep the child alive
+    std::vector<std::shared_ptr<GameObject>> children; //vector of shared pointers to the children
     std::unordered_map<std::type_index, std::unique_ptr<Component>> components;
 };
 
