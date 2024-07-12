@@ -28,18 +28,24 @@ protected:
 
 void Transform2D::update()
 {
-        std::cout << "Child GameObject" << owner->getParent().lock() << std::endl;
-        auto parentObject = owner->getParent();
-        if (auto parentTransform = parentObject.lock()->getComponent<Transform2D>())
+        std::cout << "Child GameObject" << owner->getParent() << std::endl;
+        if (owner == nullptr)
         {
-            worldPosition.x = parentTransform->worldPosition.x + position.x;
-            worldPosition.y = parentTransform->worldPosition.y + position.y;
-            worldRotation = parentTransform->worldRotation + rotation;
+            std::cerr << "owner not found" << std::endl;
+            return;
         }
-        else
-        {
+        auto parentObject = owner->getParent();
+        if(parentObject == nullptr ){
             worldPosition = position;
             worldRotation = rotation;
+            return;
         }
-
+        else {
+            auto parentTransform = parentObject->getComponent<Transform2D>();
+            if (parentTransform) {
+                worldPosition.x = parentTransform->worldPosition.x + position.x;
+                worldPosition.y = parentTransform->worldPosition.y + position.y;
+                worldRotation = parentTransform->worldRotation + rotation;
+            }
+        }
 }

@@ -8,9 +8,9 @@ class Component {
 public:
     virtual ~Component() = default;
     virtual void update() = 0;
-    void setOwner(std::weak_ptr<GameObject> owner) { this->owner = owner.lock(); }
+    void setOwner(GameObject* owner) { this->owner = owner; }
 
 protected:
-    std::shared_ptr<GameObject> owner;
+    GameObject* owner = nullptr;
 };
 

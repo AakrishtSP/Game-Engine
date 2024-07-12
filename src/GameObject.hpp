@@ -21,15 +21,15 @@ public:
     std::string getName() const { return name; }
 
     template<typename T>
-    T& addComponent();
+    std::shared_ptr<T> addComponent();
 
     template<typename T>
-    T* getComponent();
+    std::shared_ptr<T> getComponent();
 
     void addChild(std::shared_ptr<GameObject> child);
     GameObject& addChild(const std::string& name);
 
-    std::weak_ptr<GameObject> getParent() const;
+    GameObject* getParent() const;
 
     void update();
 
@@ -37,7 +37,7 @@ public:
 
 protected:
     std::string name;
-    std::weak_ptr<GameObject> parent;
+    GameObject* parent=nullptr;
     std::vector<std::shared_ptr<GameObject>> children;
     std::unordered_map<std::type_index, std::shared_ptr<Component>> components;
 };
@@ -45,38 +45,35 @@ protected:
 
 
 template<typename T>
-T& GameObject::addComponent() {
+std::shared_ptr<T> GameObject::addComponent() {
     auto component = std::make_shared<T>();
-    component->setOwner(shared_from_this());
-    T& ref = *component;
+    component->setOwner(this);
     components[std::type_index(typeid(T))] = component;
-    return ref;
+    return component;
 }
 
 
 template<typename T>
-T* GameObject::getComponent() {
+std::shared_ptr<T> GameObject::getComponent() {
     auto component = components.find(std::type_index(typeid(T)));
     if (component != components.end()) {
-        return static_cast<T*>(component->second.get());
+        return std::dynamic_pointer_cast<T>(component->second);
     }
     return nullptr;
 }
 
 void GameObject::addChild(std::shared_ptr<GameObject> child) {
-    child->parent = shared_from_this();
+    child->parent = this;
     children.push_back(child);
 }
 
 GameObject& GameObject::addChild(const std::string& name) {
     auto child = std::make_shared<GameObject>(name);
-    child->parent = shared_from_this();
-    children.push_back(child);
     addChild(child);
     return *child;
 }
 
-std::weak_ptr<GameObject> GameObject::getParent() const {
+GameObject* GameObject::getParent() const {
     return parent;
 }
 

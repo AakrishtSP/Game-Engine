@@ -13,8 +13,8 @@ int main()
     auto child1 = root.addChild("Child1");
 
     // auto rootTransform = root.addComponent<EmptyComponent>();
-    // auto rootTransform = root.addComponent<Transform2D>();
-    // auto rootSprite = root.addComponent<SpriteRenderer>();
+    auto rootTransform = root.addComponent<Transform2D>();
+    auto rootSprite = root.addComponent<SpriteRenderer>();
     std::cout << "after components" << std::endl;
 
 

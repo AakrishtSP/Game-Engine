@@ -11,12 +11,15 @@ public:
 
     ~SpriteRenderer() { UnloadTexture(texture); }
 
-    void update() override { std::cout << "SpriteRenderer update" << std::endl; };
+    void update() override;
     void draw() const;
 
 protected:
+    mutable std::shared_ptr<Transform2D> transform;
     Texture2D texture;
     Image image;
+
+    void getTransform();
 };
 
 SpriteRenderer::SpriteRenderer()
@@ -26,13 +29,32 @@ SpriteRenderer::SpriteRenderer()
     texture = LoadTextureFromImage(image);
 }
 
+void SpriteRenderer::update()
+{
+    getTransform();
+
+}
+
 void SpriteRenderer::draw() const
 {
-        auto transform = owner->getComponent<Transform2D>();
         DrawTextureV(texture, transform->getPosition(), Color{255, 255, 255, 255});
     
     if (!transform){
         std::cerr << "transform not found" << std::endl;
         return;
+    }
+}
+
+void SpriteRenderer::getTransform()
+{
+    if (owner == nullptr)
+    {
+        std::cerr << "owner not found" << std::endl;
+        return;
+    }
+    transform = owner->getComponent<Transform2D>();
+    if (!transform)
+    {
+        transform = owner->addComponent<Transform2D>();
     }
 }
