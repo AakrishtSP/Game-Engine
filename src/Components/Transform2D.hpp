@@ -6,7 +6,7 @@
 class Transform2D : public Component
 {
 public:
-    Transform2D() : position({0, 0}), rotation(0), scale({1, 1}) {}
+    Transform2D() : position({0, 0}), rotation(0), scale({1, 1}){}
     Vector2 getPosition() const { return position; }
     void setPosition(const Vector2 &position) { this->position = position; }
     float getRotation() const { return rotation; }
