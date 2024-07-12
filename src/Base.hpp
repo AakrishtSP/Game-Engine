@@ -1,68 +1,89 @@
+#pragma once
+
 #include <iostream>
 #include <string>
-#include <raylib.h>
 #include <unordered_map>
+#include <raylib.h>
 #include <typeindex>
 #include <typeinfo>
 #include <memory>
 #include <vector>
 
 
+class Component; // Forward declaration of Component
+
 class GameObject : public std::enable_shared_from_this<GameObject>{
 public:
-    GameObject(const std::string& name):name(name) {} // Constructor: initialize with a name
+    GameObject(const std::string& name): name(name) {}
 
     template<typename T, typename... Args>
-    T& addComponent(Args&&... args) { // Add a component to the game object
-        //makes component a unique pointer to a instance of a component and pass args to the constructor of the component
-        auto component = std::make_unique<T>(std::forward<Args>(args)...); 
-        component->setOwner(shared_from_this()); //gives the component a pointer to the game object
-        T& ref = *component; //dereference the component
-        components[typeid(T)] = std::move(component); //move the component to the components map
-        return ref;  //return the reference to the component
-    }
+    T& addComponent(Args&&... args);
 
     template<typename T>
-    T* getComponent() {
-        auto component = components.find(typeid(T)); //find the component in the components map of the type
-        if (component != components.end()) {  //if the component is found
-            return static_cast<T*>(component->second.get()); //return the component
-        }
-        return nullptr; //if the component is not found return null
-    }
+    T* getComponent();
 
-    //Creating Node system
-    void addChild(std::shared_ptr<GameObject> child) {
-        child->parent = shared_from_this(); //set the parent of the child to the current game object
-        children.push_back(child); //add the child to the children vector
-    }
+    void addChild(std::shared_ptr<GameObject> child);
 
-    std::shared_ptr<GameObject> getParent() const { return parent.lock(); } //return the parent of the game object {lock the weak pointer to get the shared pointer}
+    std::weak_ptr<GameObject> getParent() const;
 
-
-    //Update function to update all the components
-    void update() {
-        for (auto& [type, component] : components) {
-            component->update();
-        }
-    }
-
+    void update();
 
     virtual ~GameObject() {}
+
 protected:
     std::string name;
-    std::weak_ptr<GameObject> parent;   //weak pointer to the parent cuz we dont want child to keep the parent alive:- Only parent is allowed to keep the child alive
-    std::vector<std::shared_ptr<GameObject>> children; //vector of shared pointers to the children
-    std::unordered_map<std::type_index, std::unique_ptr<Component>> components;
+    std::weak_ptr<GameObject> parent;
+    std::vector<std::shared_ptr<GameObject>> children;
+    std::unordered_map<std::type_index, std::shared_ptr<Component>> components;
 };
-
 
 class Component {
 public:
     virtual ~Component() = default;
     virtual void update() = 0;
-    void setOwner(GameObject* owner) { this->owner = owner; }
+    void setOwner(std::shared_ptr<GameObject> owner) { this->owner = owner; }
 
 protected:
-    GameObject* owner = nullptr;
+    std::weak_ptr<GameObject> owner;
 };
+
+template<typename T, typename... Args>
+T& GameObject::addComponent(Args&&... args) {
+    auto component = std::make_unique<T>(std::forward<Args>(args)...);
+    component->setOwner(shared_from_this());
+    T& ref = *component;
+    components[std::type_index(typeid(T))] = std::move(component);
+    return ref;
+}
+
+template<typename T>
+T* GameObject::getComponent() {
+    auto component = components.find(std::type_index(typeid(T)));
+    if (component != components.end()) {
+        return static_cast<T*>(component->second.get());
+    }
+    return nullptr;
+}
+
+void GameObject::addChild(std::shared_ptr<GameObject> child) {
+    child->parent = shared_from_this();
+    children.push_back(child);
+}
+
+std::weak_ptr<GameObject> GameObject::getParent() const {
+    return parent;
+}
+
+void GameObject::update() {
+    // Use a local copy of components to avoid issues with modification during iteration
+    auto currentComponents = components;
+
+    for (auto& [type, component] : currentComponents) {
+        if (component) {
+            component->update();
+        } else {
+            // Handle case where component has been removed or is invalid
+            components.erase(type);
+        }
+    }
+}
