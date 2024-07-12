@@ -34,7 +34,6 @@ SpriteRenderer::SpriteRenderer()
 SpriteRenderer::~SpriteRenderer()
 {
     UnloadTexture(texture);
-    UnloadImage(image);
 }
 
 void SpriteRenderer::update()
