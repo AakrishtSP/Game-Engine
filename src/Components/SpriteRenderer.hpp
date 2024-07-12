@@ -13,19 +13,21 @@ public:
 
     void update() override;
     void draw() const;
+    void getTransform();
 
 protected:
     mutable std::shared_ptr<Transform2D> transform = nullptr;
     Texture2D texture;
     Image image;
-    void getTransform();
 };
 
 SpriteRenderer::SpriteRenderer()
 {
-    // image = LoadImage("assets/Raylib_logo.png");
-    image = GenImageColor(100, 100, BLACK);
+    image = LoadImage("assets/Raylib_logo.png");
+    ImageResize(&image, 100, 100);
+    // image = GenImageColor(100, 100, BLACK);
     texture = LoadTextureFromImage(image);
+    // texture = LoadTexture("assets/Raylib_logo.png");
     UnloadImage(image);
 }
 
@@ -47,7 +49,8 @@ void SpriteRenderer::update()
 void SpriteRenderer::draw() const
 {
     if (transform) {
-        DrawTextureV(texture, transform->getPosition(), WHITE);
+        Vector2 position = transform->getPosition();
+        DrawTextureV(texture, position, BLACK);
     } else {
         std::cerr << "Transform not available for drawing." << std::endl;
     }

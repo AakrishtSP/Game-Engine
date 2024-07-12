@@ -4,25 +4,24 @@
 
 int main()
 {
-    std::cout << "before objects" << std::endl;
+    // Initialization
+    const int screenWidth = 800;
+    const int screenHeight = 450;
+    InitWindow(screenWidth, screenHeight, "Raylib Game Engine");
+
+    while(!IsWindowReady());
+
+
     GameObject root("Root");
-    std::cout << "after objects"  << root.getName()  << std::endl;
-
-    
-
     auto child1 = root.addChild("Child1");
-
-    auto dummyComponent = root.addComponent<EmptyComponent>();
     auto rootTransform = root.addComponent<Transform2D>();
     auto rootSprite = root.addComponent<SpriteRenderer>();
     std::cout << "after components" << std::endl;
 
 
-    // Initialization
-    const int screenWidth = 800;
-    const int screenHeight = 450;
 
-    InitWindow(screenWidth, screenHeight, "Raylib Game Engine");
+    rootTransform->setPosition({400, 225});
+    rootSprite->getTransform();
 
     SetTargetFPS(60); // Set the game to run at 60 frames-per-second
 
@@ -31,9 +30,10 @@ int main()
         // Draw
         BeginDrawing();
 
-        ClearBackground(RAYWHITE); // Clear the screen to white
+        ClearBackground(GRAY); // Clear the screen to white
 
-        // rootSprite.draw();
+        rootSprite->draw();
+        DrawText("this IS a texture loaded from an image!", 300, 370, 10, RED);
 
         EndDrawing();
     }

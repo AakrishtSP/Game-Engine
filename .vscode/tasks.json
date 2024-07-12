@@ -16,9 +16,9 @@
                 "-lstdc++",
                 "-fdiagnostics-color=always",
                 "-g",
-                "${file}",
+                "${fileDirname}/main.cpp",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
+                "${fileDirname}/main"
             ],
             "presentation": {
                 "reveal": "always"
