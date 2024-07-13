@@ -15,8 +15,8 @@ This project is a simple game engine built using Raylib, designed to provide bas
 
 1. **Clone the repository**:
     ```sh
-    git clone https://github.com/yourusername/raylib-game-engine.git
-    cd raylib-game-engine
+    git clone https://github.com/AakrishtSP/Game-Engine.git
+    cd Game-Engine/
     ```
 
 2. **Install Raylib**:
@@ -36,7 +36,7 @@ This project is a simple game engine built using Raylib, designed to provide bas
 ## Project Structure
 
 ```
-raylib-game-engine/
+Game-Engine/
 ├── .vscode/
 │   ├── c_cpp_properties.json
 │   ├── launch.json
@@ -60,80 +60,6 @@ raylib-game-engine/
 - **assets/**: Contains asset files such as images and textures.
 - **README.md**: This file.
 
-## Configuration
-
-### IntelliSense Configuration
-
-The `c_cpp_properties.json` file in the `.vscode` folder provides include paths and IntelliSense settings for the project:
-
-```json
-{
-    "configurations": [
-        {
-            "name": "Linux",
-            "includePath": [
-                "${workspaceFolder}/**"
-            ],
-            "defines": [],
-            "compilerPath": "/usr/bin/gcc",
-            "cStandard": "c11",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "gcc-x64"
-        }
-    ],
-    "version": 4
-}
-```
-
-### Build Configuration
-
-The `tasks.json` file defines the build task for the project:
-
-```json
-{
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "build",
-            "type": "shell",
-            "command": "g++",
-            "args": [
-                "-lraylib",
-                "-lGL",
-                "-lm",
-                "-lpthread",
-                "-ldl",
-                "-lrt",
-                "-lX11",
-                "-lstdc++",
-                "-fdiagnostics-color=always",
-                "-g",
-                "${fileDirname}/main.cpp",
-                "-o",
-                "${fileDirname}/main"
-            ],
-            "presentation": {
-                "reveal": "always"
-            },
-            "problemMatcher": {
-                "owner": "cpp",
-                "fileLocation": [
-                    "relative",
-                    "${workspaceRoot}"
-                ],
-                "pattern": {
-                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-                    "file": 1,
-                    "line": 2,
-                    "column": 3,
-                    "severity": 4,
-                    "message": 5
-                }
-            }
-        }
-    ]
-}
-```
 
 ## Components
 
