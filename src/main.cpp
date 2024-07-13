@@ -5,23 +5,35 @@
 int main()
 {
     // Initialization
-    const int screenWidth = 800;
-    const int screenHeight = 450;
+    const int screenWidth = 1200;
+    const int screenHeight = 700;
     InitWindow(screenWidth, screenHeight, "Raylib Game Engine");
 
-    while(!IsWindowReady());
+    while (!IsWindowReady())
+        ;
 
     GameObject root("Root");
-    auto child1 = root.addChild("Child1");
     auto rootTransform = root.addComponent<Transform2D>();
-    auto rootSprite = root.addComponent<SpriteRenderer>();
-    std::cout << "after components" << std::endl;
+    auto &child1 = root.addChild("Child1");
+    auto &child2 = root.addChild("Child2");
 
-    rootSprite->loadImage("./assets/Raylib_logo.png");
-    rootSprite->resizeImage(100, 100);
-    rootSprite->initTexture();
-    rootTransform->setPosition({400, 225});
-    rootSprite->getTransform();
+    auto child1Transform = child1.addComponent<Transform2D>();
+    auto child1Sprite = child1.addComponent<SpriteRenderer>();
+
+    child1Sprite->loadImage("./assets/Raylib_logo.png");
+    child1Sprite->resizeImage(100, 100);
+    child1Sprite->initTexture();
+    child1Transform->setPosition({0, 0});
+    child1Sprite->getTransform();
+
+    auto child2Transform = child2.addComponent<Transform2D>();
+    auto child2Sprite = child2.addComponent<SpriteRenderer>();
+
+    child2Sprite->loadImage("./assets/Raylib_logo.png");
+    child2Sprite->resizeImage(150, 150);
+    child2Sprite->initTexture();
+    child2Transform->setPosition({-100, -100});
+    child2Sprite->getTransform();
 
     SetTargetFPS(60); // Set the game to run at 60 frames-per-second
 
@@ -31,10 +43,42 @@ int main()
         BeginDrawing();
 
         ClearBackground(GRAY); // Clear the screen to white
-        root.update();
-        // rootSprite->draw();
-        DrawText("this IS a texture loaded from an image!", 300, 370, 10, RED);
 
+        if (IsKeyDown(KEY_W))
+        {
+            child1Transform->translate({0, 1});
+        }
+        if (IsKeyDown(KEY_S))
+        {
+            child1Transform->translate({0, -1});
+        }
+        if (IsKeyDown(KEY_A))
+        {
+            child1Transform->translate({-1, 0});
+        }
+        if (IsKeyDown(KEY_D))
+        {
+            child1Transform->translate({1, 0});
+        }
+
+        if (IsKeyDown(KEY_UP))
+        {
+            child2Transform->translate({0, 1});
+        }
+        if (IsKeyDown(KEY_DOWN))
+        {
+            child2Transform->translate({0, -1});
+        }
+        if (IsKeyDown(KEY_LEFT))
+        {
+            child2Transform->translate({-1, 0});
+        }
+        if (IsKeyDown(KEY_RIGHT))
+        {
+            child2Transform->translate({1, 0});
+        }
+
+        root.update();
         EndDrawing();
     }
 

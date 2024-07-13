@@ -20,8 +20,9 @@ public:
     Texture2D getTexture() const { return texture; }
     void initTexture();
 
-
     void setOffset(const Vector2& offset) { this->offset = offset; }
+    void setScale(float scale) { this->scale = scale; }
+    void setRotation(float rotation) { this->rotation = rotation; }
 
     void update() override;
     void draw() const;
@@ -30,12 +31,16 @@ public:
 
 protected:
     mutable std::shared_ptr<Transform2D> transform = nullptr;
+    float scale = 1.0f;
     Vector2 offset;
     Texture2D texture;
+    float rotation = 0.0f;
     Image image;
+    Vector2 size;
 };
 
 SpriteRenderer::SpriteRenderer(){
+    // getTransform();
     texture = {0};
     image = {0};
 };
@@ -94,6 +99,7 @@ inline void SpriteRenderer::initTexture()
             UnloadTexture(texture);
         }
         texture = LoadTextureFromImage(image);
+        size = {static_cast<float>(texture.width), static_cast<float>(texture.height)};
         UnloadImage(image);
     }
     else
@@ -122,9 +128,11 @@ void SpriteRenderer::update()
 void SpriteRenderer::draw() const
 {
     if (transform) {
-        Vector2 position = transform->getPosition();
+        Vector2 position = transform->getGamePosition();
+        float worldRotation = transform->getWorldRotation();
+        float worldScale = transform->getWorldScale();
 
-        DrawTextureV(texture, position + offset, {255,255,255,255});
+        DrawTextureEx(texture, position + offset - size * scale *worldScale / 2,worldRotation+rotation,scale, {255,255,255,255});
     } else {
         std::cerr << "Transform not available for drawing." << std::endl;
     }

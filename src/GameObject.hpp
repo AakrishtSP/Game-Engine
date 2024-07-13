@@ -11,26 +11,25 @@
 #include "Component.hpp"
 #include "Vector2Ext.hpp"
 
-
 class Component; // Forward declaration of Component
 
-class GameObject : public std::enable_shared_from_this<GameObject>{
+class GameObject : public std::enable_shared_from_this<GameObject>
+{
 public:
-
-    GameObject(const std::string& name): name(name) {}
+    GameObject(const std::string &name) : name(name) {}
 
     std::string getName() const { return name; }
 
-    template<typename T>
+    template <typename T>
     std::shared_ptr<T> addComponent();
 
-    template<typename T>
+    template <typename T>
     std::shared_ptr<T> getComponent();
 
     void addChild(std::shared_ptr<GameObject> child);
-    GameObject& addChild(const std::string& name);
+    GameObject &addChild(const std::string &name);
 
-    GameObject* getParent() const;
+    GameObject *getParent() const;
 
     void update();
 
@@ -38,56 +37,77 @@ public:
 
 protected:
     std::string name;
-    GameObject* parent=nullptr;
+    GameObject *parent = nullptr;
     std::vector<std::shared_ptr<GameObject>> children;
     std::unordered_map<std::type_index, std::shared_ptr<Component>> components;
 };
 
-
-
-template<typename T>
-std::shared_ptr<T> GameObject::addComponent() {
+template <typename T>
+std::shared_ptr<T> GameObject::addComponent()
+{
     auto component = std::make_shared<T>();
     component->setOwner(this);
     components[std::type_index(typeid(T))] = component;
     return component;
 }
 
-
-template<typename T>
-std::shared_ptr<T> GameObject::getComponent() {
+template <typename T>
+std::shared_ptr<T> GameObject::getComponent()
+{
     auto component = components.find(std::type_index(typeid(T)));
-    if (component != components.end()) {
+    if (component != components.end())
+    {
         return std::dynamic_pointer_cast<T>(component->second);
     }
     return nullptr;
 }
 
-void GameObject::addChild(std::shared_ptr<GameObject> child) {
+void GameObject::addChild(std::shared_ptr<GameObject> child)
+{
     child->parent = this;
     children.push_back(child);
 }
 
-GameObject& GameObject::addChild(const std::string& name) {
+GameObject &GameObject::addChild(const std::string &name)
+{
     auto child = std::make_shared<GameObject>(name);
     addChild(child);
     return *child;
 }
 
-GameObject* GameObject::getParent() const {
+GameObject *GameObject::getParent() const
+{
     return parent;
 }
 
-void GameObject::update() {
-    // Use a local copy of components to avoid issues with modification during iteration
-    auto currentComponents = components;
-
-    for (auto& [type, component] : currentComponents) {
-        if (component) {
-            component->update();
-        } else {
+void GameObject::update()
+{
+    // Iterate over the original components
+    for (auto it = components.begin(); it != components.end();)
+    {
+        if (it->second)
+        {
+            it->second->update();
+            ++it;
+        }
+        else
+        {
             // Handle case where component has been removed or is invalid
-            components.erase(type);
+            it = components.erase(it);
+        }
+    }
+
+    // Iterate over the original children
+    for (auto it = children.begin(); it != children.end();)
+    {
+        if (*it)
+        {
+            (*it)->update();
+            ++it;
+        }
+        else
+        {
+            it = children.erase(it);
         }
     }
 }

@@ -11,7 +11,6 @@ public:
     void setOwner(GameObject* owner) { this->owner = owner; }
     GameObject* getOwner() const { return owner; }
     void setActive(bool active) { isActive = active; }
-    bool getActive() const { return isActive; }
 
 
 protected:
