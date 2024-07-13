@@ -11,15 +11,15 @@ int main()
 
     while(!IsWindowReady());
 
-
     GameObject root("Root");
     auto child1 = root.addChild("Child1");
     auto rootTransform = root.addComponent<Transform2D>();
     auto rootSprite = root.addComponent<SpriteRenderer>();
     std::cout << "after components" << std::endl;
 
-
-
+    rootSprite->loadImage("./assets/Raylib_logo.png");
+    rootSprite->resizeImage(100, 100);
+    rootSprite->initTexture();
     rootTransform->setPosition({400, 225});
     rootSprite->getTransform();
 
@@ -31,8 +31,8 @@ int main()
         BeginDrawing();
 
         ClearBackground(GRAY); // Clear the screen to white
-
-        rootSprite->draw();
+        root.update();
+        // rootSprite->draw();
         DrawText("this IS a texture loaded from an image!", 300, 370, 10, RED);
 
         EndDrawing();

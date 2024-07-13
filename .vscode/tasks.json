@@ -4,22 +4,24 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "g++",
-            "args": [
-                "-lraylib",
-                "-lGL",
-                "-lm",
-                "-lpthread",
-                "-ldl",
-                "-lrt",
-                "-lX11",
-                "-lstdc++",
-                "-fdiagnostics-color=always",
-                "-g",
-                "${fileDirname}/main.cpp",
-                "-o",
-                "${fileDirname}/main"
-            ],
+            "command": "./build.sh",
+            // "command": "g++",
+            // "args": [
+            //     "-lraylib",
+            //     "-lGL",
+            //     "-lm",
+            //     "-lpthread",
+            //     "-ldl",
+            //     "-lrt",
+            //     "-lX11",
+            //     "-lstdc++",
+            //     "-fdiagnostics-color=always",
+            //     "-g",
+            //     "${fileDirname}/*.cpp",
+            //     "${fileDirname}/*/*.cpp",
+            //     "-o",
+            //     "${fileDirname}/main"
+            // ],
             "presentation": {
                 "reveal": "always"
             },

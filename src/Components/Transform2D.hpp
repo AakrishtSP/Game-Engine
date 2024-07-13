@@ -15,6 +15,7 @@ public:
     void setScale(const Vector2 &scale) { this->scale = scale; }
     Vector2 getWorldPosition() const { return worldPosition; }
     float getWorldRotation() const { return worldRotation; }
+    void calculateWorldPosition();
 
     void update() override;
 
@@ -26,9 +27,8 @@ protected:
     float worldRotation;
 };
 
-void Transform2D::update()
+inline void Transform2D::calculateWorldPosition()
 {
-        std::cout << "Child GameObject" << owner->getParent() << std::endl;
         if (owner == nullptr)
         {
             std::cerr << "owner not found" << std::endl;
@@ -48,4 +48,11 @@ void Transform2D::update()
                 worldRotation = parentTransform->worldRotation + rotation;
             }
         }
+}
+
+void Transform2D::update()
+{
+    calculateWorldPosition();
+    std::cout << "World Position: " << worldPosition.x << ", " << worldPosition.y << std::endl;
+    std::cout << "World Rotation: " << worldRotation << std::endl;
 }

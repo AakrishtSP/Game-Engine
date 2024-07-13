@@ -9,6 +9,7 @@
 #include <memory>
 #include <vector>
 #include "Component.hpp"
+#include "Vector2Ext.hpp"
 
 
 class Component; // Forward declaration of Component
