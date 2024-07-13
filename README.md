@@ -1,29 +1,158 @@
-# Raylib-CPP-Starter-Template-for-VSCODE-V2
-Raylib C++ Starter Template for Visual Studio Code on Windows.
-This demo project contains a bouncing ball raylib example program.
-It works with raylib version 5.0. Tested on both Windows 10 and Windows 11.
+# Raylib Game Engine
 
-# How to use this template
-1. Double click on the main.code-workspace file. This will open the template in VS Code.
-2. From the Explorer Window of VS Code navigate to the src folder and double click on the main.cpp file.
-3. Press F5 on the keyboard to compile and run the program.
+This project is a simple game engine built using Raylib, designed to provide basic game development functionality such as game objects, components, and rendering. The engine is written in C++ and supports Linux platforms.
 
-# What's changed
-The template now uses folders for better organizion of the files. So, all the source code now lives in the src folder.
+## Table of Contents
 
-# Video Tutorial
+- [Installation](#installation)
+- [Usage](#usage)
+- [Project Structure](#project-structure)
+- [Configuration](#configuration)
+- [Components](#components)
+- [License](#license)
 
-<p align="center">
-  <img src="preview.jpg" alt="" width="800">
-</p>
+## Installation
 
-<p align="center">
-🎥 <a href="https://www.youtube.com/watch?v=PaAcVk5jUd8">Video Tutorial on YouTube</a>
-</p>
+1. **Clone the repository**:
+    ```sh
+    git clone https://github.com/yourusername/raylib-game-engine.git
+    cd raylib-game-engine
+    ```
 
-<br>
-<br>
-<p align="center">
-| 📺 <a href="https://www.youtube.com/channel/UC3ivOTE5EgpmF2DHLBmWIWg">My YouTube Channel</a>
-| 🌍 <a href="http://www.educ8s.tv">My Website</a> | <br>
-</p>
+2. **Install Raylib**:
+    Follow the instructions on the [Raylib official website](https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux) to install Raylib on your system.
+
+3. **Build the project**:
+    Open the project in Visual Studio Code and press `Ctrl+Shift+B` to build the project using the provided tasks.
+
+## Usage
+
+1. **Run the project**:
+    After building, you can run the project from within Visual Studio Code by pressing `F5`.
+
+2. **Modify the code**:
+    The main game loop and initialization are defined in `src/main.cpp`. Modify this file to change game behavior, add new components, or customize rendering.
+
+## Project Structure
+
+```
+raylib-game-engine/
+├── .vscode/
+│   ├── c_cpp_properties.json
+│   ├── launch.json
+│   ├── settings.json
+│   └── tasks.json
+├── src/
+│   ├── Components/
+│   │   ├── SpriteRenderer.hpp
+│   │   └── Transform2D.hpp
+│   ├── GameObject.hpp
+│   ├── Component.hpp
+│   ├── Base.hpp
+│   └── main.cpp
+├── assets/
+│   └── Raylib_logo.png
+└── README.md
+```
+
+- **.vscode/**: Contains Visual Studio Code configuration files for building and debugging the project.
+- **src/**: Contains all source code files for the project.
+- **assets/**: Contains asset files such as images and textures.
+- **README.md**: This file.
+
+## Configuration
+
+### IntelliSense Configuration
+
+The `c_cpp_properties.json` file in the `.vscode` folder provides include paths and IntelliSense settings for the project:
+
+```json
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-x64"
+        }
+    ],
+    "version": 4
+}
+```
+
+### Build Configuration
+
+The `tasks.json` file defines the build task for the project:
+
+```json
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-lraylib",
+                "-lGL",
+                "-lm",
+                "-lpthread",
+                "-ldl",
+                "-lrt",
+                "-lX11",
+                "-lstdc++",
+                "-fdiagnostics-color=always",
+                "-g",
+                "${fileDirname}/main.cpp",
+                "-o",
+                "${fileDirname}/main"
+            ],
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": {
+                "owner": "cpp",
+                "fileLocation": [
+                    "relative",
+                    "${workspaceRoot}"
+                ],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            }
+        }
+    ]
+}
+```
+
+## Components
+
+### Transform2D
+
+The `Transform2D` component manages the position, rotation, and scale of a game object.
+
+### SpriteRenderer
+
+The `SpriteRenderer` component handles rendering a texture on the screen.
+
+### GameObject
+
+The `GameObject` class manages components and children game objects.
+
+### Component
+
+The `Component` class is a base class for all components in the game engine.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
