@@ -4,7 +4,24 @@
 SRCS=$(find . -name "*.cpp")
 
 # Compile and link all .cpp files into an executable named 'main'
-g++ -lraylib \
+
+echo g++ -std=c++17 \
+    -lraylib \
+    -lGL \
+    -lm \
+    -lpthread \
+    -ldl \
+    -lrt \
+    -lX11 \
+    -lstdc++ \
+    -fdiagnostics-color=always \
+    -g \
+    ${SRCS} \
+    -o main
+
+
+g++ -std=c++17 \
+    -lraylib \
     -lGL \
     -lm \
     -lpthread \
